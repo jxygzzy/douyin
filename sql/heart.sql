@@ -11,7 +11,7 @@
  Target Server Version : 50736
  File Encoding         : 65001
 
- Date: 30/05/2022 21:05:50
+ Date: 30/05/2022 22:17:46
 */
 
 SET NAMES utf8mb4;
@@ -93,6 +93,8 @@ CREATE TABLE `t_video`  (
   `cover_key` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `user_id` int(11) NOT NULL,
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `comment_count` int(11) NOT NULL DEFAULT 0,
+  `favorite_count` int(11) NOT NULL DEFAULT 0,
   `create_date` datetime(0) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '视频表' ROW_FORMAT = Dynamic;
