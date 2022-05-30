@@ -3,7 +3,10 @@ package authutil
 import (
 	"context"
 	"douyin/config"
+	"douyin/constants"
 	"douyin/util/redisutil"
+	"errors"
+	"log"
 	"sync"
 
 	"github.com/gomodule/redigo/redis"
@@ -50,4 +53,36 @@ func (a *AuthUtil) CreateToken(ctx context.Context, userId int) (string, error) 
 		return "", err
 	}
 	return token, nil
+}
+
+func (a *AuthUtil) CheckToken(ctx context.Context, token string) (int, error) {
+	if a.ru == nil {
+		a.loadRedisUtil()
+	}
+	var userId int
+	hit, err := a.ru.Get(ctx, token, &userId)
+	if err != nil {
+		return 0, err
+	}
+	if !hit {
+		return 0, errors.New(constants.TOKEN_NOT_EXIST_ERROR)
+	}
+	go a.RefreshToken(ctx, token)
+	return userId, nil
+}
+
+func (a *AuthUtil) RefreshToken(ctx context.Context, token string) {
+	if a.ru == nil {
+		a.loadRedisUtil()
+	}
+	ttl, ttlErr := a.ru.TTL(ctx, token)
+	if ttlErr != nil {
+		log.Printf("error when ttl token:%v", ttlErr)
+	}
+	if ttl < config.Redis_ttl {
+		err := a.ru.Expire(ctx, token, config.Redis_ttl)
+		if err != nil {
+			log.Printf("error when reflash token:%v", err)
+		}
+	}
 }

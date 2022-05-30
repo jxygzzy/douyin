@@ -7,7 +7,7 @@ const (
 	Redis_password    = "heartdancer"
 	Redis_db          = 0
 	Redis_ttl         = 60 * 60 * 24 * 30 // 30天
-	Redis_reflash     = 60 * 60 * 24 * 15 // 15天
+	Redis_refresh     = 60 * 60 * 24 * 15 // 15天
 	UserTableName     = "t_user"
 	VideoTableName    = "t_video"
 	FavoriteTableName = "t_favorite"
