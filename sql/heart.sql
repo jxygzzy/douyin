@@ -11,7 +11,7 @@
  Target Server Version : 50736
  File Encoding         : 65001
 
- Date: 30/05/2022 09:05:16
+ Date: 30/05/2022 21:05:50
 */
 
 SET NAMES utf8mb4;
@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS `t_comment`;
 CREATE TABLE `t_comment`  (
   `id` int(11) NOT NULL,
   `video_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `content` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `create_date` datetime(0) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -72,12 +73,15 @@ CREATE TABLE `t_user`  (
   `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `password` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `follower_count` int(11) NOT NULL DEFAULT 0,
+  `follow_count` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
+INSERT INTO `t_user` VALUES (1, 'jxygzzy', '1a69e2dc480768b4e7e80f94ae332651', '抖音用户1', 0, 0);
 
 -- ----------------------------
 -- Table structure for t_video
