@@ -4,6 +4,7 @@ import (
 	"context"
 	"douyin/constants"
 	"douyin/db"
+	"douyin/response"
 	"douyin/util/authutil"
 	"douyin/util/md5util"
 	"sync"
@@ -13,14 +14,15 @@ type UserSerice struct {
 }
 
 type UserLoginResponse struct {
-	Response
+	response.Response
 	UserId int64  `json:"user_id,omitempty"`
 	Token  string `json:"token"`
+	Name   string `json:"name"`
 }
 
 type UserResponse struct {
-	Response
-	User User `json:"user"`
+	response.Response
+	User response.User `json:"user"`
 }
 
 var (
@@ -35,11 +37,11 @@ func NewUserService() *UserSerice {
 	return &UserSerice{}
 }
 
-func (us *UserSerice) Login(username string, password string) (response *UserLoginResponse) {
+func (us *UserSerice) Login(username string, password string) (resp *UserLoginResponse) {
 	userDao := db.GetUserByUsername(username)
 	if userDao == nil {
 		return &UserLoginResponse{
-			Response: Response{
+			Response: response.Response{
 				StatusCode: 3001,
 				StatusMsg:  constants.USER_NOT_EXIST_ERROR,
 			},
@@ -47,7 +49,7 @@ func (us *UserSerice) Login(username string, password string) (response *UserLog
 	}
 	if md5util.MD5WithSalt(username, password) != userDao.Password {
 		return &UserLoginResponse{
-			Response: Response{
+			Response: response.Response{
 				StatusCode: 500,
 				StatusMsg:  constants.PASSWORD_INCORRECT_ERROR,
 			},
@@ -56,19 +58,20 @@ func (us *UserSerice) Login(username string, password string) (response *UserLog
 	token, err := auth.CreateToken(context.Background(), userDao.ID)
 	if err != nil {
 		return &UserLoginResponse{
-			Response: Response{
+			Response: response.Response{
 				StatusCode: 500,
 				StatusMsg:  "系统错误",
 			},
 		}
 	}
-	response = &UserLoginResponse{
-		Response: Response{
+	resp = &UserLoginResponse{
+		Response: response.Response{
 			StatusCode: 200,
 			StatusMsg:  "登录成功",
 		},
 		UserId: int64(userDao.ID),
 		Token:  token,
+		Name:   userDao.Name,
 	}
-	return response
+	return resp
 }
