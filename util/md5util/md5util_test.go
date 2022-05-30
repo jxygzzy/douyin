@@ -7,6 +7,6 @@ import (
 )
 
 func TestMd5(t *testing.T) {
-	md5 := md5util.MD5WithSalt("抖音用户111", "123456")
+	md5 := md5util.MD5WithSalt("jxygzzy", "123456")
 	fmt.Printf("md5:%v", md5)
 }

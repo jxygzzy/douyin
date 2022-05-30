@@ -1,6 +1,9 @@
 package db
 
-import "time"
+import (
+	"douyin/config"
+	"time"
+)
 
 type VideoDao struct {
 	ID         int       `gorm:"column:id;autoIncrement"`
@@ -9,4 +12,8 @@ type VideoDao struct {
 	UserId     int       `gorm:"column:user_id"`
 	Title      string    `gorm:"column:title"`
 	CreateDate time.Time `gorm:"column:create_date"`
+}
+
+func (VideoDao) TableName() string {
+	return config.VideoTableName
 }
