@@ -19,4 +19,6 @@ const (
 	QiniuDomian        = "http://rcnco1agb.hd-bkt.clouddn.com"
 	QiniuUrlExpire     = 60 * 60 * 24 * 2 // 2天
 	RedisUrlExpireDiff = 60 * 60 * 2      //2小时 客户端拿到链接至少两小时内有效
+
+	TEMP_FILE_DIR = "\\tmp\\"
 )

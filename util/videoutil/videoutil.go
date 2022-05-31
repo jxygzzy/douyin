@@ -8,6 +8,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -21,29 +24,29 @@ import (
 
 // 方法参照 https://juejin.cn/post/7099827417170051103
 // GetSnapshot 生成视频缩略图并保存（作为封面）
-func GetSnapshot(videoPath, snapshotPath string, frameNum int) (snapshotName string) {
+func GetSnapshot(videoPath string, snapshotPath string, frameNum int) (snapshotName string, err error) {
 	buf := bytes.NewBuffer(nil)
-	err := ffmpeg.Input(videoPath).
+	err = ffmpeg.Input(videoPath).
 		Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frameNum)}).
 		Output("pipe:", ffmpeg.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}).
 		WithOutput(buf, os.Stdout).
 		Run()
 	if err != nil {
-		log.Fatal("生成缩略图失败：", err)
+		panic(err)
 	}
 
 	img, err := imaging.Decode(buf)
 	if err != nil {
-		log.Fatal("生成缩略图失败：", err)
+		panic(err)
 	}
 
 	err = imaging.Save(img, snapshotPath+".jpeg")
 	if err != nil {
-		log.Fatal("生成缩略图失败：", err)
+		panic(err)
 	}
 
 	// 成功则返回生成的缩略图名
-	names := strings.Split(snapshotPath, "/")
+	names := strings.Split(snapshotPath, "\\")
 	snapshotName = names[len(names)-1] + ".jpeg"
 	return
 }
@@ -72,7 +75,6 @@ func UploadData(key string, data []byte) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(ret.Key, ret.Hash)
 }
 
 var (
@@ -119,4 +121,33 @@ func GetDownloadUrl(key string) string {
 	// 缓存url，避免频繁创建
 	ru.Set(context.Background(), key, privateAccessURL, config.QiniuUrlExpire-config.RedisUrlExpireDiff)
 	return privateAccessURL
+}
+
+func GetCurrentAbPath() string {
+	dir := getCurrentAbPathByExecutable()
+	tmpDir, _ := filepath.EvalSymlinks(os.TempDir())
+	if strings.Contains(dir, tmpDir) {
+		return getCurrentAbPathByCaller()
+	}
+	return dir
+}
+
+// 获取当前执行文件绝对路径
+func getCurrentAbPathByExecutable() string {
+	exePath, err := os.Executable()
+	if err != nil {
+		log.Fatal(err)
+	}
+	res, _ := filepath.EvalSymlinks(filepath.Dir(exePath))
+	return res
+}
+
+// 获取当前执行文件绝对路径（go run）
+func getCurrentAbPathByCaller() string {
+	var abPath string
+	_, filename, _, ok := runtime.Caller(0)
+	if ok {
+		abPath = path.Dir(filename)
+	}
+	return abPath
 }

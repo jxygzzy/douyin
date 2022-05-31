@@ -43,10 +43,26 @@ func AuthMiddleware() func(c *gin.Context) {
 			c.Set("userId", userId)
 			c.Next()
 		}
-		c.JSON(http.StatusOK, gin.H{
-			"code": 3001,
-			"msg":  constants.TOKEN_NOT_EXIST_ERROR,
-		})
-		c.Abort()
+		token = c.PostForm("token")
+		if token != "" {
+			// 向redis查询token信息
+			userId, err := auth.CheckToken(c, token)
+			if err != nil {
+				c.JSON(http.StatusOK, response.Response{
+					StatusCode: 3001,
+					StatusMsg:  constants.TOKEN_NOT_EXIST_ERROR,
+				})
+				c.Abort()
+			}
+			c.Set("userId", userId)
+			c.Next()
+		}
+		if token == "" {
+			c.JSON(http.StatusOK, response.Response{
+				StatusCode: 3001,
+				StatusMsg:  constants.TOKEN_NOT_EXIST_ERROR,
+			})
+			c.Abort()
+		}
 	}
 }

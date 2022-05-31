@@ -2,6 +2,7 @@ package db
 
 import (
 	"douyin/config"
+	"log"
 	"time"
 )
 
@@ -18,4 +19,19 @@ type VideoDao struct {
 
 func (VideoDao) TableName() string {
 	return config.VideoTableName
+}
+
+func SaveVideo(user_id int, play_key string, cover_key string, title string) error {
+	video := &VideoDao{
+		PlayKey:    play_key,
+		CoverKey:   cover_key,
+		UserId:     user_id,
+		Title:      title,
+		CreateDate: time.Now(),
+	}
+	DB.Save(video)
+	if DB.Error != nil {
+		log.Fatalln(DB.Error)
+	}
+	return DB.Error
 }
