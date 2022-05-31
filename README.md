@@ -14,6 +14,12 @@
 | 冀虹           | 接口：用户注册、用户信息、发布列表                           |
 | 申永燕         | 接口：关注操作、关注列表                                     |
 
+# 其他环境
+
+获取视频封面用到了`ffmpeg`，需要此环境[ffbinaries.com/downloads](https://link.juejin.cn/?target=https%3A%2F%2Fffbinaries.com%2Fdownloads)
+
+windows环境选择**windows-64**下载解压得到一个 .exe 文件，放置到 GOPATH 下的 bin 目录即可 
+
 # 其他
 
 项目介绍：https://bytedance.feishu.cn/docx/doxcnbgkMy2J0Y3E6ihqrvtHXPg
