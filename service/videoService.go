@@ -6,6 +6,7 @@ import (
 	"douyin/response"
 	"douyin/util/md5util"
 	"douyin/util/videoutil"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -89,7 +90,7 @@ func (vs *VideoService) Feed(user_id int64, last_time time.Time) (resp *FeedResp
 	return &FeedResponse{
 		Response: response.Response{
 			StatusCode: 200,
-			StatusMsg:  "成功",
+			StatusMsg:  fmt.Sprintf("刷新%d条视频", len(videoList)),
 		},
 		NextTime:  next_time.Unix(),
 		VideoList: &videoList,
