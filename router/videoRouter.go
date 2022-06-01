@@ -8,6 +8,7 @@ import (
 
 func InitVideoRouter(r *gin.Engine) {
 	// 在绑定handler之前绑定中间件才能保证调用顺序
-	publish := r.Group("/douyin/publish/").Use(middleware.AuthMiddleware())
-	publish.POST("action/", controller.PublishVideo)
+	r.POST("/douyin/publish/action/", middleware.AuthMiddleware(), controller.PublishVideo)
+	r.GET("/douyin/feed", controller.Feed)
+	r.GET("/douyin/publish/list/", middleware.AuthMiddleware())
 }

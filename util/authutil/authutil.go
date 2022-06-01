@@ -43,7 +43,7 @@ func NewAuthUtil() *AuthUtil {
 	return &AuthUtil{}
 }
 
-func (a *AuthUtil) CreateToken(ctx context.Context, userId int) (string, error) {
+func (a *AuthUtil) CreateToken(ctx context.Context, userId int64) (string, error) {
 	if a.ru == nil {
 		a.loadRedisUtil()
 	}
@@ -55,11 +55,11 @@ func (a *AuthUtil) CreateToken(ctx context.Context, userId int) (string, error) 
 	return token, nil
 }
 
-func (a *AuthUtil) CheckToken(ctx context.Context, token string) (int, error) {
+func (a *AuthUtil) CheckToken(ctx context.Context, token string) (int64, error) {
 	if a.ru == nil {
 		a.loadRedisUtil()
 	}
-	var userId int
+	var userId int64
 	hit, err := a.ru.Get(ctx, token, &userId)
 	if err != nil {
 		return 0, err

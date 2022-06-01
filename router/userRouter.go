@@ -2,11 +2,13 @@ package router
 
 import (
 	"douyin/controller"
+	"douyin/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
 func InitUserRuoter(r *gin.Engine) {
-	usergroup := r.Group("/douyin/user")
-	usergroup.POST("/login/", controller.UserLogin)
+	r.GET("/douyin/user/", middleware.AuthMiddleware())
+	r.POST("/douyin/user/login/", controller.UserLogin)
+	r.POST("/douyin/user/register/")
 }

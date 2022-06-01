@@ -7,6 +7,7 @@ import (
 )
 
 func InitRelationRouter(r *gin.Engine) {
-	relationGroup := r.Group("/douyin/relation").Use(middleware.AuthMiddleware())
-	relationGroup.GET("/follower/list/", controller.GetFollowerList)
+	r.GET("/douyin/relation/follower/list/", middleware.AuthMiddleware(), controller.GetFollowerList)
+	r.POST("/douyin/relation/action/", middleware.AuthMiddleware())
+	r.GET("/douyin/relation/follow/list/", middleware.AuthMiddleware())
 }

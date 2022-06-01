@@ -28,6 +28,7 @@ func AuthMiddleware() func(c *gin.Context) {
 			}
 			c.Set("userId", userId)
 			c.Next()
+			return
 		}
 		token = c.Request.PostFormValue("token")
 		if token != "" {
@@ -42,6 +43,7 @@ func AuthMiddleware() func(c *gin.Context) {
 			}
 			c.Set("userId", userId)
 			c.Next()
+			return
 		}
 		token = c.PostForm("token")
 		if token != "" {
@@ -56,6 +58,7 @@ func AuthMiddleware() func(c *gin.Context) {
 			}
 			c.Set("userId", userId)
 			c.Next()
+			return
 		}
 		if token == "" {
 			c.JSON(http.StatusOK, response.Response{

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"douyin/config"
 	"douyin/db"
 	"douyin/response"
 	"douyin/util/md5util"
@@ -10,6 +11,8 @@ import (
 	"os"
 	"path"
 	"strings"
+	"sync"
+	"time"
 )
 
 type VideoService struct {
@@ -19,7 +22,7 @@ func NewVideoService() *VideoService {
 	return &VideoService{}
 }
 
-func (vs *VideoService) UploadData(user_id int, title string, fileName string, filePath string) *response.Response {
+func (vs *VideoService) UploadData(user_id int64, title string, fileName string, filePath string) *response.Response {
 	var imgKey string
 	var videoKey string
 	go func() {
@@ -51,5 +54,44 @@ func (vs *VideoService) UploadData(user_id int, title string, fileName string, f
 	return &response.Response{
 		StatusCode: 200,
 		StatusMsg:  "投稿成功，正在上传",
+	}
+}
+
+type FeedResponse struct {
+	response.Response
+	NextTime  int64             `json:"next_time"`
+	VideoList *[]response.Video `json:"video_list"`
+}
+
+func (vs *VideoService) Feed(user_id int64, last_time time.Time) (resp *FeedResponse) {
+	var next_time time.Time
+	var videoList = make([]response.Video, 0, config.FEED_NUM)
+	var wg sync.WaitGroup
+	videos := db.Feed(last_time)
+	for i, n := 0, len(*videos); i < n; i++ {
+		var video = &response.Video{}
+		video.Id = (*videos)[i].ID
+		video.FavoriteCount = (*videos)[i].FavoriteCount
+		video.CommentCount = (*videos)[i].CommentCount
+		video.Title = (*videos)[i].Title
+		video.Author = db.GetAuthorById(user_id, (*videos)[i].UserId)
+		video.IsFavorite = db.HasFavorite(user_id, (*videos)[i].ID)
+		video.PlayUrl = videoutil.GetDownloadUrl((*videos)[i].PlayKey)
+		video.CoverUrl = videoutil.GetDownloadUrl((*videos)[i].CoverKey)
+		videoList = append(videoList, *video)
+	}
+	if len(*videos) < config.FEED_NUM {
+		next_time = time.Now()
+	} else {
+		next_time = (*videos)[len(*videos)-1].CreateDate
+	}
+	wg.Wait()
+	return &FeedResponse{
+		Response: response.Response{
+			StatusCode: 200,
+			StatusMsg:  "成功",
+		},
+		NextTime:  next_time.Unix(),
+		VideoList: &videoList,
 	}
 }

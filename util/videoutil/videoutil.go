@@ -116,16 +116,14 @@ func GetDownloadUrl(key string) string {
 		log.Fatal(err)
 	}
 	if hit {
-		fmt.Println("key hit!")
 		return url
 	}
-	fmt.Println("key not hit,create url")
 	mac := qbox.NewMac(config.QiniuAccessKey, config.QiniuSecretKey)
 	domain := config.QiniuDomian
 	deadline := time.Now().Add(time.Second * config.QiniuUrlExpire).Unix() //1小时有效期
 	privateAccessURL := storage.MakePrivateURL(mac, domain, key, deadline)
 	// 缓存url，避免频繁创建
-	ru.Set(context.Background(), key, privateAccessURL, config.QiniuUrlExpire-config.RedisUrlExpireDiff)
+	go ru.Set(context.Background(), key, privateAccessURL, config.QiniuUrlExpire-config.RedisUrlExpireDiff)
 	return privateAccessURL
 }
 

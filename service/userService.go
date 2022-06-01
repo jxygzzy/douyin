@@ -71,7 +71,6 @@ func (us *UserSerice) Login(username string, password string) (resp *UserLoginRe
 		},
 		UserId: int64(userDao.ID),
 		Token:  token,
-		Name:   userDao.Name,
 	}
 	return resp
 }

@@ -39,7 +39,7 @@ func GetFollowerList(userId int, userList *[]response.User) error {
 		t_relation r1,
 		t_user 
 	WHERE
-		r1.to_user_id = 1 
+		r1.to_user_id = ? 
 		AND t_user.id = r1.user_id
 	`, userId).Scan(&userList)
 	return DB.Error
