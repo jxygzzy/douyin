@@ -3,6 +3,17 @@
 我们是第三届字节跳动青训营 HeartDancer小组 组号：112358
 
 
+# 项目启动
+
+请使用go build运行项目，请不要使用go run
+
+```shell
+go build
+
+./douyin.exe
+
+```
+
 # 成员分工
 
 | 成员           | 负责内容                                                     |
