@@ -66,6 +66,12 @@ func UploadData(key string, data []byte) {
 	// 上传是否使用CDN上传加速
 	cfg.UseCdnDomains = false
 
+	bucketManager := storage.NewBucketManager(mac, &cfg)
+	fileInfo, sErr := bucketManager.Stat(config.QiniuBucket, key)
+	if sErr == nil && fileInfo.Fsize != 0 {
+		// 当文件在云端存在则不上传
+		return
+	}
 	formUploader := storage.NewFormUploader(&cfg)
 	ret := storage.PutRet{}
 	putExtra := storage.PutExtra{}

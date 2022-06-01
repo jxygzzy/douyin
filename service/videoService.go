@@ -25,7 +25,8 @@ func (vs *VideoService) UploadData(user_id int, title string, fileName string, f
 		imgPath := strings.Replace(filePath+fileName, path.Ext(fileName), "", 1)
 		imgName, err := videoutil.GetSnapshot(filePath+fileName, imgPath, 48)
 		if err != nil {
-			panic(err)
+			os.Remove(filePath + imgName)
+			return
 		}
 		imgMd5, _ := md5util.CalcFileMD5(filePath + imgName)
 		imgKey = imgMd5 + path.Ext(imgName)
