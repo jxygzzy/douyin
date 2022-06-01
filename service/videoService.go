@@ -6,6 +6,7 @@ import (
 	"douyin/util/md5util"
 	"douyin/util/videoutil"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"strings"
@@ -40,9 +41,12 @@ func (vs *VideoService) UploadData(user_id int, title string, fileName string, f
 		videoKey = md5 + path.Ext(fileName)
 		videoBytes, _ := ioutil.ReadFile(filePath + fileName)
 		videoutil.UploadData(videoKey, videoBytes)
+		log.Printf("用户：%v 投稿文件已上传\n", user_id)
 		db.SaveVideo(user_id, videoKey, imgKey, title)
+		log.Printf("用户：%v 投稿数据已保存\n", user_id)
 		os.Remove(filePath + fileName)
 		os.Remove(filePath + imgName)
+		log.Printf("用户：%v 临时文件已删除\n", user_id)
 	}()
 	return &response.Response{
 		StatusCode: 200,

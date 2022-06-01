@@ -7,13 +7,13 @@ import (
 	"douyin/util/videoutil"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func PublishVideo(c *gin.Context) {
 	user_id, exi := c.Get("userId")
+	token := c.PostForm("token")
 	if !exi {
 		c.JSON(http.StatusOK, response.Response{
 			StatusCode: 500,
@@ -39,7 +39,7 @@ func PublishVideo(c *gin.Context) {
 		return
 	}
 	filePath := videoutil.GetCurrentAbPath() + config.TEMP_FILE_DIR
-	header.Filename = strconv.Itoa(user_id_int) + header.Filename
+	header.Filename = token + header.Filename
 	err := c.SaveUploadedFile(header, filePath+header.Filename)
 	if err != nil {
 		log.Fatalln(err)
