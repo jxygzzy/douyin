@@ -1,5 +1,7 @@
 package response
 
+import "time"
+
 type Response struct {
 	StatusCode int32  `json:"status_code"`
 	StatusMsg  string `json:"status_msg,omitempty"`
@@ -14,6 +16,7 @@ type Video struct {
 	CommentCount  int64  `json:"comment_count"`
 	IsFavorite    bool   `json:"is_favorite"`
 	Title         string `json:"title,omitempty"`
+	CreateDate    time.Time
 }
 
 type Comment struct {

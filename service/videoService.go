@@ -11,6 +11,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -83,6 +84,7 @@ func (vs *VideoService) Feed(user_id int64, last_time time.Time) (resp *FeedResp
 			video.IsFavorite = db.HasFavorite(user_id, videoDao.ID)
 			video.PlayUrl = videoutil.GetDownloadUrl(videoDao.PlayKey)
 			video.CoverUrl = videoutil.GetDownloadUrl(videoDao.CoverKey)
+			video.CreateDate = videoDao.CreateDate
 			videoList = append(videoList, *video)
 		}(videoDao)
 	}
@@ -92,6 +94,9 @@ func (vs *VideoService) Feed(user_id int64, last_time time.Time) (resp *FeedResp
 		next_time = (*videos)[len(*videos)-1].CreateDate
 	}
 	wg.Wait()
+	sort.Slice(videoList, func(i, j int) bool {
+		return videoList[i].CreateDate.After(videoList[j].CreateDate)
+	})
 	return &FeedResponse{
 		Response: response.Response{
 			StatusCode: 200,
