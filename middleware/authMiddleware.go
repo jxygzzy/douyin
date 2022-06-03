@@ -9,12 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	auth = authutil.NewAuthUtil()
-)
-
 func AuthMiddleware() func(c *gin.Context) {
 	return func(c *gin.Context) {
+		auth := authutil.NewAuthUtil()
 		token := c.Query("token")
 		if token != "" {
 			// 向redis查询token信息

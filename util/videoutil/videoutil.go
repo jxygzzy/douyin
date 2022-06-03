@@ -12,7 +12,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"sync"
 	"time"
 
 	imaging "github.com/disintegration/imaging"
@@ -84,32 +83,21 @@ func UploadData(key string, data []byte) {
 }
 
 var (
-	loadRedisUtilOnce sync.Once
-	ru                *redisutil.RedisUtil
+	redis_pool_config = &redis.Pool{
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", config.Redis_addr,
+				redis.DialDatabase(config.Redis_db),
+				redis.DialPassword(config.Redis_password))
+			if err != nil {
+				return nil, err
+			}
+			return c, nil
+		},
+	}
 )
 
-func loadRedisUtil() {
-	// 单例模式
-	loadRedisUtilOnce.Do(func() {
-		ru = redisutil.NewRedisUtil(&redis.Pool{
-			Dial: func() (redis.Conn, error) {
-				c, err := redis.Dial("tcp", config.Redis_addr,
-					redis.DialDatabase(config.Redis_db),
-					redis.DialPassword(config.Redis_password))
-				if err != nil {
-					return nil, err
-				}
-				return c, nil
-			},
-		})
-	})
-
-}
-
 func GetDownloadUrl(key string) string {
-	if ru == nil {
-		loadRedisUtil()
-	}
+	ru := redisutil.NewRedisUtil(redis_pool_config)
 	var url string
 	hit, err := ru.Get(context.Background(), key, &url)
 	if err != nil {

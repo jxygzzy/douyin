@@ -3,6 +3,7 @@ package main
 import (
 	"douyin/config"
 	"douyin/router"
+
 	"github.com/gin-gonic/gin"
 )
 

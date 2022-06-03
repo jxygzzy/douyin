@@ -67,19 +67,24 @@ type FeedResponse struct {
 func (vs *VideoService) Feed(user_id int64, last_time time.Time) (resp *FeedResponse) {
 	var next_time time.Time
 	var videoList = make([]response.Video, 0, config.FEED_NUM)
-	var wg sync.WaitGroup
 	videos := db.Feed(last_time)
+	wg := sync.WaitGroup{}
 	for i, n := 0, len(*videos); i < n; i++ {
-		var video = &response.Video{}
-		video.Id = (*videos)[i].ID
-		video.FavoriteCount = (*videos)[i].FavoriteCount
-		video.CommentCount = (*videos)[i].CommentCount
-		video.Title = (*videos)[i].Title
-		video.Author = db.GetAuthorById(user_id, (*videos)[i].UserId)
-		video.IsFavorite = db.HasFavorite(user_id, (*videos)[i].ID)
-		video.PlayUrl = videoutil.GetDownloadUrl((*videos)[i].PlayKey)
-		video.CoverUrl = videoutil.GetDownloadUrl((*videos)[i].CoverKey)
-		videoList = append(videoList, *video)
+		var videoDao = (*videos)[i]
+		wg.Add(1)
+		go func(videoDao db.VideoDao) {
+			defer wg.Done()
+			var video = &response.Video{}
+			video.Id = videoDao.ID
+			video.FavoriteCount = videoDao.FavoriteCount
+			video.CommentCount = videoDao.CommentCount
+			video.Title = videoDao.Title
+			video.Author = db.GetAuthorById(user_id, videoDao.UserId)
+			video.IsFavorite = db.HasFavorite(user_id, videoDao.ID)
+			video.PlayUrl = videoutil.GetDownloadUrl(videoDao.PlayKey)
+			video.CoverUrl = videoutil.GetDownloadUrl(videoDao.CoverKey)
+			videoList = append(videoList, *video)
+		}(videoDao)
 	}
 	if len(*videos) < config.FEED_NUM {
 		next_time = time.Now()
@@ -90,7 +95,7 @@ func (vs *VideoService) Feed(user_id int64, last_time time.Time) (resp *FeedResp
 	return &FeedResponse{
 		Response: response.Response{
 			StatusCode: 200,
-			StatusMsg:  fmt.Sprintf("刷新%d条视频", len(videoList)),
+			StatusMsg:  fmt.Sprintf("刷新%d条视频", len(*videos)),
 		},
 		NextTime:  next_time.Unix(),
 		VideoList: &videoList,

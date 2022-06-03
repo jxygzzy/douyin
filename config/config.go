@@ -1,10 +1,10 @@
 package config
 
 const (
-	DSN                = "heartdancer:Heartdancer123.@tcp(47.98.120.35:3306)/heart?charset=utf8&parseTime=True"
+	DSN                = "root:123456@tcp(127.0.0.1:3306)/heart?charset=utf8&parseTime=True"
 	ServerPort         = ":8088"
-	Redis_addr         = "47.98.120.35:6379"
-	Redis_password     = "heartdancer"
+	Redis_addr         = "127.0.0.1:6379"
+	Redis_password     = ""
 	Redis_db           = 0
 	Redis_ttl          = 60 * 60 * 24 * 30 // 30天
 	Redis_refresh      = 60 * 60 * 24 * 15 // 15天

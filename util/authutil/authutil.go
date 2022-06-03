@@ -7,48 +7,36 @@ import (
 	"douyin/util/redisutil"
 	"errors"
 	"log"
-	"sync"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/google/uuid"
 )
 
 type AuthUtil struct {
-	ru *redisutil.RedisUtil
 }
 
 var (
-	loadRedisUtilOnce sync.Once
+	redis_pool_config = &redis.Pool{
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", config.Redis_addr,
+				redis.DialDatabase(config.Redis_db),
+				redis.DialPassword(config.Redis_password))
+			if err != nil {
+				return nil, err
+			}
+			return c, nil
+		},
+	}
 )
-
-func (a *AuthUtil) loadRedisUtil() {
-	// 单例模式
-	loadRedisUtilOnce.Do(func() {
-		a.ru = redisutil.NewRedisUtil(&redis.Pool{
-			Dial: func() (redis.Conn, error) {
-				c, err := redis.Dial("tcp", config.Redis_addr,
-					redis.DialDatabase(config.Redis_db),
-					redis.DialPassword(config.Redis_password))
-				if err != nil {
-					return nil, err
-				}
-				return c, nil
-			},
-		})
-	})
-
-}
 
 func NewAuthUtil() *AuthUtil {
 	return &AuthUtil{}
 }
 
 func (a *AuthUtil) CreateToken(ctx context.Context, userId int64) (string, error) {
-	if a.ru == nil {
-		a.loadRedisUtil()
-	}
+	ru := redisutil.NewRedisUtil(redis_pool_config)
 	token := uuid.New().String()
-	err := a.ru.Set(ctx, token, userId, config.Redis_ttl)
+	err := ru.Set(ctx, token, userId, config.Redis_ttl)
 	if err != nil {
 		return "", err
 	}
@@ -56,11 +44,9 @@ func (a *AuthUtil) CreateToken(ctx context.Context, userId int64) (string, error
 }
 
 func (a *AuthUtil) CheckToken(ctx context.Context, token string) (int64, error) {
-	if a.ru == nil {
-		a.loadRedisUtil()
-	}
+	ru := redisutil.NewRedisUtil(redis_pool_config)
 	var userId int64
-	hit, err := a.ru.Get(ctx, token, &userId)
+	hit, err := ru.Get(ctx, token, &userId)
 	if err != nil {
 		return 0, err
 	}
@@ -72,15 +58,13 @@ func (a *AuthUtil) CheckToken(ctx context.Context, token string) (int64, error) 
 }
 
 func (a *AuthUtil) RefreshToken(ctx context.Context, token string) {
-	if a.ru == nil {
-		a.loadRedisUtil()
-	}
-	ttl, ttlErr := a.ru.TTL(ctx, token)
+	ru := redisutil.NewRedisUtil(redis_pool_config)
+	ttl, ttlErr := ru.TTL(ctx, token)
 	if ttlErr != nil {
 		log.Printf("error when ttl token:%v", ttlErr)
 	}
-	if ttl < config.Redis_ttl {
-		err := a.ru.Expire(ctx, token, config.Redis_ttl)
+	if ttl < config.Redis_ttl-config.Redis_refresh {
+		err := ru.Expire(ctx, token, config.Redis_ttl)
 		if err != nil {
 			log.Printf("error when reflash token:%v", err)
 		}
