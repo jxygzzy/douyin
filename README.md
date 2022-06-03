@@ -37,6 +37,8 @@ SQL文件在/sql/heart.sql
 
 windows环境选择**windows-64**下载解压得到一个 .exe 文件，放置到 GOPATH 下的 bin 目录即可 
 
+获取封面方案参考掘金文章：[GoLang 项目实战：通过视频生成缩略图作为封面｜青训营笔记](https://juejin.cn/post/7099827417170051103)
+
 
 # 成员分工
 
