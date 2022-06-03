@@ -17,13 +17,19 @@ go build
 # 启动环境
 
 ## MySQL
-可在项目/config/config.go中修改DSN，例如：`root:123456@tcp(127.0.0.1:3306)/heart?charset=utf8&parseTime=True`
+可在项目/config/config.go中修改DSN
+
+例如：`root:123456@tcp(127.0.0.1:3306)/heart?charset=utf8&parseTime=True`
+
 SQL文件在/sql/heart.sql
 
 ## Redis
 可在项目/config/config.go中修改Redis配置
+
 `Redis_addr`为redis地址，例如：`127.0.0.1:6379`
+
 `Redis_password`为redis密码，为空则不需要密码
+
 `Redis_db`为redis数据库，默认为0
 
 ## ffmpeg
