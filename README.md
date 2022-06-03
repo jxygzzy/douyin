@@ -33,7 +33,7 @@ SQL文件在/sql/heart.sql
 `Redis_db`为redis数据库，默认为0
 
 ## ffmpeg
-获取视频封面用到了`ffmpeg`，需要此环境[ffbinaries.com/downloads](https://link.juejin.cn/?target=https%3A%2F%2Fffbinaries.com%2Fdownloads)
+获取视频封面用到了`ffmpeg`，需要此环境[ffbinaries.com/downloads](https://ffbinaries.com/downloads)
 
 windows环境选择**windows-64**下载解压得到一个 .exe 文件，放置到 GOPATH 下的 bin 目录即可 
 
