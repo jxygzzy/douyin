@@ -48,7 +48,26 @@ func Comment(c *gin.Context) {
 }
 
 func CommentList(c *gin.Context) {
-
+	user_id, _ := c.Get("userId")
+	video_id_query := c.Query("video_id")
+	if video_id_query == "" {
+		c.JSON(http.StatusOK, &response.Response{
+			StatusCode: 500,
+			StatusMsg:  "video_id不能为空",
+		})
+		return
+	}
+	video_id, _ := strconv.ParseInt(video_id_query, 10, 64)
+	commentService := service.NewCommentService()
+	resp, err := commentService.CommentList(video_id, user_id.(int64))
+	if err != nil {
+		c.JSON(http.StatusOK, &response.Response{
+			StatusCode: 500,
+			StatusMsg:  "获取评论列表失败",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, resp)
 }
 
 func validComment(c *gin.Context) bool {

@@ -47,13 +47,25 @@ func GetAuthorById(user_id int64, author_id int64) (author response.User) {
 	return
 }
 
-func GetUserById(user_id int64) (user response.User) {
+func GetUserById(user_id int64, to_user_id int64) (user response.User) {
 	DB.Raw(`
 	select t_user.id AS id,
 	t_user.NAME AS name,
 	t_user.follow_count AS follow_count,
-	t_user.follower_count AS foolower_count 
+	t_user.follower_count AS foolower_count ,
+	IF((
+		SELECT
+			count(*) 
+		FROM
+			t_relation
+		WHERE
+		t_relation.to_user_id = ?
+		AND t_relation.user_id = t_user.id
+		) > 0,
+		TRUE,
+		FALSE 
+	) AS is_follow 
 	from t_user where t_user.id = ?
-	`, user_id).Scan(&user)
+	`, to_user_id, user_id).Scan(&user)
 	return
 }

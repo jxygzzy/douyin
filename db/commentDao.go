@@ -35,8 +35,8 @@ func SaveComment(video_id int64, user_id int64, content string) (*CommentDao, er
 		return nil, err.Error
 	}
 	err = tx.Model(&VideoDao{}).
-		UpdateColumn("comment_count", gorm.Expr("comment_count + ?", 1)).
-		Where("id = ?", video_id)
+		Where("id = ?", video_id).
+		UpdateColumn("comment_count", gorm.Expr("comment_count + ?", 1))
 	if err.Error != nil {
 		tx.Rollback()
 		return nil, err.Error
@@ -47,18 +47,28 @@ func SaveComment(video_id int64, user_id int64, content string) (*CommentDao, er
 
 func DelComment(video_id int64, comment_id int64) error {
 	tx := DB.Begin()
-	err := tx.Model(&VideoDao{}).UpdateColumn("comment_count", gorm.Expr("comment_count - ?", 1)).
-		Where("id = ?", video_id)
+	err := tx.Model(&VideoDao{}).
+		Where("id = ?", video_id).
+		UpdateColumn("comment_count", gorm.Expr("comment_count - ?", 1))
 	if err.Error != nil {
 		tx.Rollback()
 		return err.Error
 	}
-	err = tx.Model(&CommentDao{}).UpdateColumn("delete_at", 0).
-		Where("id = ?", comment_id)
+	err = tx.Model(&CommentDao{}).
+		Where("id = ?", comment_id).
+		UpdateColumn("delete_at", 1)
 	if err.Error != nil {
 		tx.Rollback()
 		return err.Error
 	}
 	tx.Commit()
 	return nil
+}
+
+func CommentList(video_id int64) (commentList *[]CommentDao, err error) {
+	dbErr := DB.Model(&CommentDao{}).Where("delete_at != 1").Order("create_date desc").Scan(&commentList)
+	if dbErr.Error != nil {
+		return nil, dbErr.Error
+	}
+	return commentList, nil
 }
