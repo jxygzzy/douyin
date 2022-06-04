@@ -34,7 +34,16 @@ func Comment(c *gin.Context) {
 		c.JSON(http.StatusOK, resp)
 		return
 	} else {
-		commentService.DelComment(video_id, comment_id)
+		resp, err := commentService.DelComment(video_id, comment_id)
+		if err != nil {
+			c.JSON(http.StatusOK, response.Response{
+				StatusCode: 500,
+				StatusMsg:  "删除评论失败",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, resp)
+		return
 	}
 }
 

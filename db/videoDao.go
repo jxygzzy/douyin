@@ -2,7 +2,6 @@ package db
 
 import (
 	"douyin/config"
-	"log"
 	"time"
 )
 
@@ -31,15 +30,15 @@ func SaveVideo(user_id int64, play_key string, cover_key string, title string) e
 	}
 	err := DB.Save(video)
 	if err.Error != nil {
-		log.Println(err.Error)
+		return err.Error
 	}
-	return err.Error
+	return nil
 }
 
-func Feed(last_time time.Time) (video_list *[]VideoDao) {
-	DB.Where("create_date <= ?", last_time.Format("2006-01-02 15:04:05")).Order("create_date desc").Limit(config.FEED_NUM).Find(&video_list)
-	if DB.Error != nil {
-		log.Println(DB.Error)
+func Feed(last_time time.Time) (video_list *[]VideoDao, err error) {
+	dbErr := DB.Where("create_date <= ?", last_time.Format("2006-01-02 15:04:05")).Order("create_date desc").Limit(config.FEED_NUM).Find(&video_list)
+	if dbErr.Error != nil {
+		return nil, dbErr.Error
 	}
-	return
+	return video_list, nil
 }

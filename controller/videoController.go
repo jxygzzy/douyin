@@ -16,15 +16,8 @@ import (
 )
 
 func PublishVideo(c *gin.Context) {
-	user_id, exi := c.Get("userId")
+	user_id, _ := c.Get("userId")
 	token := c.PostForm("token")
-	if !exi {
-		c.JSON(http.StatusOK, response.Response{
-			StatusCode: 500,
-			StatusMsg:  "token有误,请重新登录",
-		})
-		return
-	}
 	user_id_int := user_id.(int64)
 	title := c.PostForm("title")
 	if title == "" {
@@ -84,6 +77,13 @@ func Feed(c *gin.Context) {
 		user_id = userId
 	}
 	videoService := service.NewVideoService()
-	resp := videoService.Feed(user_id, latest_time)
+	resp, err := videoService.Feed(user_id, latest_time)
+	if err != nil {
+		c.JSON(http.StatusOK, response.Response{
+			StatusCode: 500,
+			StatusMsg:  "刷新视频失败",
+		})
+		return
+	}
 	c.JSON(http.StatusOK, resp)
 }

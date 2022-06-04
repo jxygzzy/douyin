@@ -65,10 +65,13 @@ type FeedResponse struct {
 	VideoList *[]response.Video `json:"video_list"`
 }
 
-func (vs *VideoService) Feed(user_id int64, last_time time.Time) (resp *FeedResponse) {
+func (vs *VideoService) Feed(user_id int64, last_time time.Time) (resp *FeedResponse, err error) {
 	var next_time time.Time
 	var videoList = make([]response.Video, 0, config.FEED_NUM)
-	videos := db.Feed(last_time)
+	videos, err := db.Feed(last_time)
+	if err != nil {
+		return nil, err
+	}
 	wg := sync.WaitGroup{}
 	for i, n := 0, len(*videos); i < n; i++ {
 		var videoDao = (*videos)[i]
@@ -104,5 +107,5 @@ func (vs *VideoService) Feed(user_id int64, last_time time.Time) (resp *FeedResp
 		},
 		NextTime:  next_time.Unix(),
 		VideoList: &videoList,
-	}
+	}, nil
 }

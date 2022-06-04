@@ -38,9 +38,13 @@ func (cs *CommentService) PublishComment(video_id int64, user_id int64, comment_
 	}, nil
 }
 
-func (cs *CommentService) DelComment(video_id int64, comment_id int64) *response.Response {
+func (cs *CommentService) DelComment(video_id int64, comment_id int64) (*response.Response, error) {
+	err := db.DelComment(video_id, comment_id)
+	if err != nil {
+		return nil, err
+	}
 	return &response.Response{
 		StatusCode: 200,
 		StatusMsg:  "删除评论成功",
-	}
+	}, nil
 }
