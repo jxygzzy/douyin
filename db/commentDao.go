@@ -11,9 +11,24 @@ type CommentDao struct {
 	UserId     int64     `gorm:"column:user_id"`
 	Content    string    `gorm:"column:content"`
 	CreateDate time.Time `gorm:"column:create_date"`
-	Delete     int64     `gorm:"column:delete"`
+	DeleteAt   int64     `gorm:"column:delete_at"`
 }
 
 func (CommentDao) TableName() string {
 	return config.CommentTableName
+}
+
+func SaveComment(video_id int64, user_id int64, content string) (*CommentDao, error) {
+	commentDao := &CommentDao{
+		VideoId:    video_id,
+		UserId:     user_id,
+		Content:    content,
+		CreateDate: time.Now(),
+		DeleteAt:   0,
+	}
+	err := DB.Save(commentDao)
+	if err.Error != nil {
+		return nil, err.Error
+	}
+	return commentDao, nil
 }

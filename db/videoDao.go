@@ -29,11 +29,11 @@ func SaveVideo(user_id int64, play_key string, cover_key string, title string) e
 		Title:      title,
 		CreateDate: time.Now(),
 	}
-	DB.Save(video)
-	if DB.Error != nil {
-		log.Println(DB.Error)
+	err := DB.Save(video)
+	if err.Error != nil {
+		log.Println(err.Error)
 	}
-	return DB.Error
+	return err.Error
 }
 
 func Feed(last_time time.Time) (video_list *[]VideoDao) {

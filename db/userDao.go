@@ -46,3 +46,14 @@ func GetAuthorById(user_id int64, author_id int64) (author response.User) {
 	`, author_id, user_id).Scan(&author)
 	return
 }
+
+func GetUserById(user_id int64) (user response.User) {
+	DB.Raw(`
+	select t_user.id AS id,
+	t_user.NAME AS name,
+	t_user.follow_count AS follow_count,
+	t_user.follower_count AS foolower_count 
+	from t_user where t_user.id = ?
+	`, user_id).Scan(&user)
+	return
+}
