@@ -68,7 +68,7 @@ func Feed(c *gin.Context) {
 			})
 			return
 		}
-		latestTime := time.Unix(last_time_unix, 0)
+		latestTime := time.Unix(last_time_unix/1000, 0)
 		latest_time = latestTime
 	}
 	token := c.Query("token")
