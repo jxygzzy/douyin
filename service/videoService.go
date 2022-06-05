@@ -109,3 +109,49 @@ func (vs *VideoService) Feed(user_id int64, last_time time.Time) (resp *FeedResp
 		VideoList: &videoList,
 	}, nil
 }
+
+type PublishListResponse struct {
+	response.Response
+	VideoList *[]response.Video `json:"video_list"`
+}
+
+func (vs *VideoService) PublishList(user_id int64) (*PublishListResponse, error) {
+	videoDaos, err := db.PublishList(user_id)
+	if err != nil {
+		return nil, err
+	}
+	user, err := db.GetUserById(user_id, user_id)
+	if err != nil {
+		return nil, err
+	}
+	videoList := make([]response.Video, 0, len(*videoDaos))
+	wg := sync.WaitGroup{}
+	for i, n := 0, len(*videoDaos); i < n; i++ {
+		wg.Add(1)
+		go func(videoDao db.VideoDao) {
+			defer wg.Done()
+			video := &response.Video{}
+			video.Id = videoDao.ID
+			video.FavoriteCount = videoDao.FavoriteCount
+			video.CommentCount = videoDao.CommentCount
+			video.Title = videoDao.Title
+			video.Author = *user
+			video.IsFavorite = db.HasFavorite(user_id, videoDao.ID)
+			video.PlayUrl = videoutil.GetDownloadUrl(videoDao.PlayKey)
+			video.CoverUrl = videoutil.GetDownloadUrl(videoDao.CoverKey)
+			video.CreateDate = videoDao.CreateDate
+			videoList = append(videoList, *video)
+		}((*videoDaos)[i])
+	}
+	wg.Wait()
+	sort.Slice(videoList, func(i, j int) bool {
+		return videoList[i].CreateDate.After(videoList[j].CreateDate)
+	})
+	return &PublishListResponse{
+		Response: response.Response{
+			StatusCode: 200,
+			StatusMsg:  fmt.Sprintf("共%d条发布", len(*videoDaos)),
+		},
+		VideoList: &videoList,
+	}, nil
+}

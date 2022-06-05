@@ -87,3 +87,25 @@ func Feed(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, resp)
 }
+
+func PublishList(c *gin.Context) {
+	user_id_query := c.Query("user_id")
+	if user_id_query == "" {
+		c.JSON(http.StatusOK, response.Response{
+			StatusCode: 500,
+			StatusMsg:  "user_id不能为空",
+		})
+		return
+	}
+	user_id, _ := strconv.ParseInt(user_id_query, 10, 64)
+	videoService := service.NewVideoService()
+	resp, err := videoService.PublishList(user_id)
+	if err != nil {
+		c.JSON(http.StatusOK, response.Response{
+			StatusCode: 500,
+			StatusMsg:  "获取发表列表失败：" + err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, resp)
+}

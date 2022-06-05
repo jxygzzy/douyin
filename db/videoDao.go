@@ -42,3 +42,11 @@ func Feed(last_time time.Time) (video_list *[]VideoDao, err error) {
 	}
 	return video_list, nil
 }
+
+func PublishList(user_id int64) (video_list *[]VideoDao, err error) {
+	dbErr := DB.Where("user_id = ?", user_id).Order("create_date desc").Find(&video_list)
+	if dbErr.Error != nil {
+		return nil, dbErr.Error
+	}
+	return video_list, nil
+}
