@@ -26,14 +26,14 @@ func (cs *CommentService) PublishComment(video_id int64, user_id int64, comment_
 	if err != nil {
 		return nil, err
 	}
-	user := db.GetUserById(user_id, user_id)
+	user, _ := db.GetUserById(user_id, user_id)
 	var timeFormat = "01-02"
 	return &CommentResponse{
 		Response: response.Response{
 			StatusCode: 200,
 			StatusMsg:  "评论成功",
 		},
-		User:       user,
+		User:       *user,
 		Content:    comment_text,
 		CreateDate: commentDao.CreateDate.Format(timeFormat),
 		ID:         commentDao.ID,
@@ -71,7 +71,8 @@ func (cs *CommentService) CommentList(video_id int64, user_id int64) (*CommentLi
 			comment.Id = commentDao.ID
 			comment.Content = commentDao.Content
 			comment.CreateDate = commentDao.CreateDate.Format("01-02")
-			comment.User = db.GetUserById(user_id, commentDao.UserId)
+			user, _ := db.GetUserById(user_id, commentDao.UserId)
+			comment.User = *user
 			commentList = append(commentList, comment)
 		}((*commentDaos)[i])
 	}

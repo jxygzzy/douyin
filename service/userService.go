@@ -76,3 +76,22 @@ func (us *UserSerice) Register(username string, password string) (*UserLoginResp
 		Token:  token,
 	}, nil
 }
+
+type UserInfoResponse struct {
+	response.Response
+	User *response.User `json:"user"`
+}
+
+func (us *UserSerice) UserInfo(user_id int64) (*UserInfoResponse, error) {
+	user, err := db.GetUserById(user_id, user_id)
+	if err != nil {
+		return nil, err
+	}
+	return &UserInfoResponse{
+		Response: response.Response{
+			StatusCode: 200,
+			StatusMsg:  "获取成功",
+		},
+		User: user,
+	}, nil
+}

@@ -4,6 +4,7 @@ import (
 	"douyin/response"
 	"douyin/service"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -46,6 +47,28 @@ func UserRegister(c *gin.Context) {
 		c.JSON(http.StatusOK, response.Response{
 			StatusCode: 500,
 			StatusMsg:  "注册失败：" + err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, resp)
+}
+
+func UserInfo(c *gin.Context) {
+	user_id_query := c.Query("user_id")
+	if user_id_query == "" {
+		c.JSON(http.StatusOK, response.Response{
+			StatusCode: 500,
+			StatusMsg:  "user_id不能为空",
+		})
+		return
+	}
+	user_id, _ := strconv.ParseInt(user_id_query, 10, 64)
+	userService := service.NewUserService()
+	resp, err := userService.UserInfo(user_id)
+	if err != nil {
+		c.JSON(http.StatusOK, response.Response{
+			StatusCode: 500,
+			StatusMsg:  "获取用户信息失败：" + err.Error(),
 		})
 		return
 	}

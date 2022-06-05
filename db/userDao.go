@@ -50,8 +50,8 @@ func GetAuthorById(user_id int64, author_id int64) (author response.User) {
 	return
 }
 
-func GetUserById(user_id int64, to_user_id int64) (user response.User) {
-	DB.Raw(`
+func GetUserById(user_id int64, to_user_id int64) (user *response.User, err error) {
+	dbErr := DB.Raw(`
 	select t_user.id AS id,
 	t_user.NAME AS name,
 	t_user.follow_count AS follow_count,
@@ -70,7 +70,10 @@ func GetUserById(user_id int64, to_user_id int64) (user response.User) {
 	) AS is_follow 
 	from t_user where t_user.id = ?
 	`, to_user_id, user_id).Scan(&user)
-	return
+	if dbErr.Error != nil {
+		return nil, dbErr.Error
+	}
+	return user, nil
 }
 
 func Register(username string, password string, name string) (*UserDao, error) {

@@ -8,7 +8,7 @@ import (
 )
 
 func InitUserRuoter(r *gin.Engine) {
-	r.GET("/douyin/user/", middleware.AuthMiddleware())
+	r.GET("/douyin/user/", middleware.AuthMiddleware(), controller.UserInfo)
 	r.POST("/douyin/user/login/", controller.UserLogin)
 	r.POST("/douyin/user/register/", controller.UserRegister)
 }
