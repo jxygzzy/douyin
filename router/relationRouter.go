@@ -8,6 +8,6 @@ import (
 
 func InitRelationRouter(r *gin.Engine) {
 	r.GET("/douyin/relation/follower/list/", middleware.AuthMiddleware(), controller.GetFollowerList)
-	r.POST("/douyin/relation/action/", middleware.AuthMiddleware())
-	r.GET("/douyin/relation/follow/list/", middleware.AuthMiddleware())
+	r.POST("/douyin/relation/action/", middleware.AuthMiddleware(), controller.Follow)
+	r.GET("/douyin/relation/follow/list/", middleware.AuthMiddleware(), controller.FollowList)
 }

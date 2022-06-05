@@ -17,7 +17,6 @@ type UserLoginResponse struct {
 	response.Response
 	UserId int64  `json:"user_id,omitempty"`
 	Token  string `json:"token"`
-	Name   string `json:"name"`
 }
 
 type UserResponse struct {

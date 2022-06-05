@@ -63,7 +63,7 @@ func (a *AuthUtil) RefreshToken(ctx context.Context, token string) {
 	if ttlErr != nil {
 		log.Printf("error when ttl token:%v", ttlErr)
 	}
-	if ttl < config.Redis_ttl-config.Redis_refresh {
+	if ttl < config.Redis_refresh {
 		err := ru.Expire(ctx, token, config.Redis_ttl)
 		if err != nil {
 			log.Printf("error when reflash token:%v", err)

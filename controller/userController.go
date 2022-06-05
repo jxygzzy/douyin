@@ -16,7 +16,7 @@ func UserLogin(c *gin.Context) {
 			StatusCode: 500,
 			StatusMsg:  "缺少username/password参数",
 		})
-		c.Abort()
+		return
 	}
 	userSerice := service.NewUserService()
 	response := userSerice.Login(username, password)
