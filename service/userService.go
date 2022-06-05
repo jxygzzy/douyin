@@ -2,12 +2,12 @@ package service
 
 import (
 	"context"
-	"douyin/constants"
 	"douyin/db"
 	"douyin/response"
 	"douyin/util/authutil"
 	"douyin/util/md5util"
-	"sync"
+	"douyin/util/randomutil"
+	"fmt"
 )
 
 type UserSerice struct {
@@ -24,52 +24,55 @@ type UserResponse struct {
 	User response.User `json:"user"`
 }
 
-var (
-	auth             *authutil.AuthUtil
-	loadAuthUtilOnce sync.Once
-)
-
 func NewUserService() *UserSerice {
-	loadAuthUtilOnce.Do(func() {
-		auth = authutil.NewAuthUtil()
-	})
 	return &UserSerice{}
 }
 
-func (us *UserSerice) Login(username string, password string) (resp *UserLoginResponse) {
-	userDao := db.GetUserByUsername(username)
-	if userDao == nil {
-		return &UserLoginResponse{
-			Response: response.Response{
-				StatusCode: 3001,
-				StatusMsg:  constants.USER_NOT_EXIST_ERROR,
-			},
-		}
+func (us *UserSerice) Login(username string, password string) (resp *UserLoginResponse, err error) {
+	userDao, err := db.GetUserByUsername(username)
+	if err != nil {
+		return nil, err
 	}
-	if md5util.MD5WithSalt(username, password) != userDao.Password {
-		return &UserLoginResponse{
-			Response: response.Response{
-				StatusCode: 500,
-				StatusMsg:  constants.PASSWORD_INCORRECT_ERROR,
-			},
-		}
+	if userDao == nil || md5util.MD5WithSalt(username, password) != userDao.Password {
+		return nil, fmt.Errorf("用户名或密码不正确")
 	}
+	auth := authutil.NewAuthUtil()
 	token, err := auth.CreateToken(context.Background(), userDao.ID)
 	if err != nil {
-		return &UserLoginResponse{
-			Response: response.Response{
-				StatusCode: 500,
-				StatusMsg:  "系统错误",
-			},
-		}
+		return nil, fmt.Errorf("系统缓存错误")
 	}
 	resp = &UserLoginResponse{
 		Response: response.Response{
 			StatusCode: 200,
 			StatusMsg:  "登录成功",
 		},
-		UserId: int64(userDao.ID),
+		UserId: userDao.ID,
 		Token:  token,
 	}
-	return resp
+	return resp, nil
+}
+
+func (us *UserSerice) Register(username string, password string) (*UserLoginResponse, error) {
+	userDao, err := db.GetUserByUsername(username)
+	if err == nil && userDao.ID != 0 {
+		return nil, fmt.Errorf("用户名已存在")
+	}
+	err = nil
+	userDao, err = db.Register(username, md5util.MD5WithSalt(username, password), "抖声用户"+randomutil.RandString(4))
+	if err != nil {
+		return nil, err
+	}
+	auth := authutil.NewAuthUtil()
+	token, err := auth.CreateToken(context.Background(), userDao.ID)
+	if err != nil {
+		return nil, err
+	}
+	return &UserLoginResponse{
+		Response: response.Response{
+			StatusCode: 200,
+			StatusMsg:  "注册成功",
+		},
+		UserId: userDao.ID,
+		Token:  token,
+	}, nil
 }

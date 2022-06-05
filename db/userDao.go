@@ -18,10 +18,13 @@ func (UserDao) TableName() string {
 	return config.UserTableName
 }
 
-func GetUserByUsername(username string) *UserDao {
+func GetUserByUsername(username string) (*UserDao, error) {
 	userDao := &UserDao{}
-	DB.Where("username", username).First(&userDao)
-	return userDao
+	err := DB.Where("username", username).First(&userDao)
+	if err.Error != nil {
+		return nil, err.Error
+	}
+	return userDao, nil
 }
 
 func GetAuthorById(user_id int64, author_id int64) (author response.User) {
@@ -68,4 +71,17 @@ func GetUserById(user_id int64, to_user_id int64) (user response.User) {
 	from t_user where t_user.id = ?
 	`, to_user_id, user_id).Scan(&user)
 	return
+}
+
+func Register(username string, password string, name string) (*UserDao, error) {
+	userDao := &UserDao{
+		Username: username,
+		Password: password,
+		Name:     name,
+	}
+	err := DB.Save(&userDao)
+	if err.Error != nil {
+		return nil, err.Error
+	}
+	return userDao, nil
 }
