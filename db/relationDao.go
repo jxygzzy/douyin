@@ -3,6 +3,7 @@ package db
 import (
 	"douyin/config"
 	"douyin/response"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -19,6 +20,12 @@ func (RelationDao) TableName() string {
 
 func Follow(user_id int64, to_user_id int64) error {
 	tx := DB.Begin()
+	var count int64
+	tx.Model(&RelationDao{}).Where("user_id = ? and to_user_id = ?", user_id, to_user_id).Count(&count)
+	if count > 0 {
+		tx.Rollback()
+		return fmt.Errorf("已经关注了")
+	}
 	relationDao := &RelationDao{
 		UserId:   user_id,
 		ToUserId: to_user_id,
@@ -48,6 +55,12 @@ func Follow(user_id int64, to_user_id int64) error {
 
 func UnFollow(user_id int64, to_user_id int64) error {
 	tx := DB.Begin()
+	var count int64
+	tx.Model(&RelationDao{}).Where("user_id = ? and to_user_id = ?", user_id, to_user_id).Count(&count)
+	if count == 0 {
+		tx.Rollback()
+		return fmt.Errorf("没有关注记录")
+	}
 	err := tx.Where("user_id = ? and to_user_id = ?", user_id, to_user_id).Delete(&RelationDao{})
 	if err.Error != nil {
 		tx.Rollback()
