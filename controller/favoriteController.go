@@ -63,5 +63,24 @@ func validFavorite(c *gin.Context) bool {
 }
 
 func FavoriteList(c *gin.Context) {
-
+	user_id_query := c.Query("user_id")
+	if user_id_query == "" {
+		c.JSON(http.StatusOK, response.Response{
+			StatusCode: 500,
+			StatusMsg:  "video_id不能为空",
+		})
+		return
+	}
+	favoriteService := service.NewFavoriteService()
+	user_id, _ := strconv.ParseInt(user_id_query, 10, 64)
+	resp, err := favoriteService.FavoriteList(user_id)
+	if err != nil {
+		c.JSON(http.StatusOK, response.Response{
+			StatusCode: 500,
+			StatusMsg:  "获取点赞列表失败：" + err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, resp)
+	return
 }

@@ -74,3 +74,15 @@ func UnFavorite(user_id int64, video_id int64) error {
 	tx.Commit()
 	return nil
 }
+
+func FavoriteList(user_id int64) (videoDaos *[]VideoDao, err error) {
+	dbErr := DB.Raw(`
+	select t_video.* from t_video,t_favorite
+	where t_video.id=t_favorite.video_id
+	and t_favorite.user_id = ?
+	`, user_id).Scan(&videoDaos)
+	if dbErr.Error != nil {
+		return nil, dbErr.Error
+	}
+	return videoDaos, nil
+}
