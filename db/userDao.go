@@ -52,7 +52,7 @@ func GetAuthorById(user_id int64, author_id int64) (author response.User) {
 		FALSE 
 	) AS is_follow 
 	from t_user where t_user.id = ?
-	`, author_id, user_id).Scan(&author)
+	`, user_id, author_id).Scan(&author)
 	return
 }
 
@@ -78,7 +78,7 @@ func GetUserById(user_id int64, to_user_id int64) (user *response.User, err erro
 		FALSE 
 	) AS is_follow 
 	from t_user where t_user.id = ?
-	`, to_user_id, user_id).Scan(&user)
+	`, user_id, to_user_id).Scan(&user)
 	if dbErr.Error != nil {
 		return nil, dbErr.Error
 	}
