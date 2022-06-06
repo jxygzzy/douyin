@@ -11,7 +11,7 @@
  Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 04/06/2022 22:24:03
+ Date: 06/06/2022 22:04:22
 */
 
 SET NAMES utf8mb4;
@@ -29,12 +29,15 @@ CREATE TABLE `t_comment`  (
   `create_date` datetime(0) NOT NULL,
   `delete_at` int(0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '评论表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '评论表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_comment
 -- ----------------------------
 INSERT INTO `t_comment` VALUES (1, 18, 1, '评论一下，视频很不错', '2022-06-04 14:23:47', 0);
+INSERT INTO `t_comment` VALUES (3, 18, 1, '再来评论一下，视频真的很不错', '2022-06-04 15:27:27', 0);
+INSERT INTO `t_comment` VALUES (4, 18, 2, '好可爱的猫猫', '2022-06-06 12:53:27', 0);
+INSERT INTO `t_comment` VALUES (5, 19, 1, '猫猫', '2022-06-06 13:50:57', 0);
 
 -- ----------------------------
 -- Table structure for t_favorite
@@ -45,11 +48,16 @@ CREATE TABLE `t_favorite`  (
   `video_id` int(0) NOT NULL,
   `user_id` int(0) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '点赞表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '点赞表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_favorite
 -- ----------------------------
+INSERT INTO `t_favorite` VALUES (3, 18, 2);
+INSERT INTO `t_favorite` VALUES (4, 23, 1);
+INSERT INTO `t_favorite` VALUES (5, 20, 1);
+INSERT INTO `t_favorite` VALUES (6, 19, 1);
+INSERT INTO `t_favorite` VALUES (7, 18, 1);
 
 -- ----------------------------
 -- Table structure for t_relation
@@ -60,11 +68,12 @@ CREATE TABLE `t_relation`  (
   `user_id` int(0) NOT NULL,
   `to_user_id` int(0) NOT NULL COMMENT '被关注者id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '关系表，关注与被关注' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '关系表，关注与被关注' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_relation
 -- ----------------------------
+INSERT INTO `t_relation` VALUES (1, 1, 2);
 
 -- ----------------------------
 -- Table structure for t_user
@@ -77,13 +86,19 @@ CREATE TABLE `t_user`  (
   `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `follower_count` int(0) NOT NULL DEFAULT 0,
   `follow_count` int(0) NOT NULL DEFAULT 0,
+  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'https://pic2.zhimg.com/80/v2-b951b9e3e65678a93c7f2d6184b81337_720w.jpg',
+  `background_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'https://pic4.zhimg.com/80/v2-2501a93fe6acebfc81f8c1c825df2367_720w.jpg',
+  `signature` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '什么都无法舍弃的人，什么都无法改变。',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES (1, 'jxygzzy', '1a69e2dc480768b4e7e80f94ae332651', '抖声用户dfxs', 0, 0);
+INSERT INTO `t_user` VALUES (1, 'jxygzzy', '1a69e2dc480768b4e7e80f94ae332651', '抖声用户dfxs', 0, 1, 'https://pic2.zhimg.com/80/v2-b951b9e3e65678a93c7f2d6184b81337_720w.jpg', 'https://pic4.zhimg.com/80/v2-2501a93fe6acebfc81f8c1c825df2367_720w.jpg', '什么都无法舍弃的人，什么都无法改变。');
+INSERT INTO `t_user` VALUES (2, 'heart', '8fd52bb1654248a17f1890f500bd11f0', '抖声用户wydh', 1, 0, 'https://pic2.zhimg.com/80/v2-b951b9e3e65678a93c7f2d6184b81337_720w.jpg', 'https://pic4.zhimg.com/80/v2-2501a93fe6acebfc81f8c1c825df2367_720w.jpg', '什么都无法舍弃的人，什么都无法改变。');
+INSERT INTO `t_user` VALUES (3, 'jxygzzy1', '9766e44c9485ae3cf4ae6b2418864440', '抖声用户MKSS', 0, 0, 'https://pic2.zhimg.com/80/v2-b951b9e3e65678a93c7f2d6184b81337_720w.jpg', 'https://pic4.zhimg.com/80/v2-2501a93fe6acebfc81f8c1c825df2367_720w.jpg', '什么都无法舍弃的人，什么都无法改变。');
+INSERT INTO `t_user` VALUES (4, 'heart1', 'f1936ffeeec86f5b1424d01b5c2606a1', '抖声用户mNoO', 0, 0, 'https://pic2.zhimg.com/80/v2-b951b9e3e65678a93c7f2d6184b81337_720w.jpg', 'https://pic4.zhimg.com/80/v2-2501a93fe6acebfc81f8c1c825df2367_720w.jpg', '什么都无法舍弃的人，什么都无法改变。');
 
 -- ----------------------------
 -- Table structure for t_video
@@ -113,12 +128,12 @@ INSERT INTO `t_video` VALUES (14, '65bcec4df55077a0b8b6b5d596764581.mp4', 'e0afa
 INSERT INTO `t_video` VALUES (15, 'f9774ff83f3635ac62d5b6520b3e2d27.mp4', 'ac5d1517d2e550b5b439874336e2d89a.jpeg', 1, 'Supermarket Flowers', 0, 0, '2022-06-03 08:56:36');
 INSERT INTO `t_video` VALUES (16, '8a8a62bbc57fd4a75bf5d12b132a68fa.mp4', '8f8711f8b98da630a5abdd0bb8c534d0.jpeg', 1, '拜托拜托，请大数据把我推给喜欢我的姨姨们#脸红研究所', 0, 0, '2022-06-03 08:56:49');
 INSERT INTO `t_video` VALUES (17, '65c7032d89ba799a963d257368cf1765.mp4', '263f51dda0df30c057a312113b55099d.jpeg', 1, '给孩子送去学表演吧，戏可太多了#曼基康矮脚 #猫咪的迷惑行为', 0, 0, '2022-06-03 08:57:07');
-INSERT INTO `t_video` VALUES (18, '69f4a60b2ad9060d12e0d178587c14e7.mp4', 'aa8fb3c63ef0f3e0eccfaaec316f14db.jpeg', 1, '工作一天辛苦啦，来看小猫咪喝neinei解压吧～#萌宠 #猫咪', 0, 0, '2022-06-03 08:57:19');
-INSERT INTO `t_video` VALUES (19, '3c1128a789079f6fa9bd8110e3e3fde7.mp4', 'c9f521c8f1a155b7762d546d1b17bbe0.jpeg', 1, '今天的天气很好 但是小猫咪也不知道和谁出去玩', 0, 0, '2022-06-03 08:57:33');
-INSERT INTO `t_video` VALUES (20, '9e6c7c7915dac1b3f2151e95dbaad799.mp4', '496e2848c76696faa94774f96f2f43f1.jpeg', 1, '看它睡觉都觉得幸福……', 0, 0, '2022-06-03 08:57:44');
+INSERT INTO `t_video` VALUES (18, '69f4a60b2ad9060d12e0d178587c14e7.mp4', 'aa8fb3c63ef0f3e0eccfaaec316f14db.jpeg', 1, '工作一天辛苦啦，来看小猫咪喝neinei解压吧～#萌宠 #猫咪', 3, 2, '2022-06-03 08:57:19');
+INSERT INTO `t_video` VALUES (19, '3c1128a789079f6fa9bd8110e3e3fde7.mp4', 'c9f521c8f1a155b7762d546d1b17bbe0.jpeg', 1, '今天的天气很好 但是小猫咪也不知道和谁出去玩', 1, 1, '2022-06-03 08:57:33');
+INSERT INTO `t_video` VALUES (20, '9e6c7c7915dac1b3f2151e95dbaad799.mp4', '496e2848c76696faa94774f96f2f43f1.jpeg', 1, '看它睡觉都觉得幸福……', 0, 1, '2022-06-03 08:57:44');
 INSERT INTO `t_video` VALUES (21, '32de46e2576c5bf050f5f04ec20b70bb.mp4', '0a379d7bfe6c7a0ada7821e8fa982e6b.jpeg', 1, '猫咪好治愈啊……#歌曲孤孤单单', 0, 0, '2022-06-03 08:57:55');
 INSERT INTO `t_video` VALUES (22, '45b77343ce19e86af42accbf16752096.mp4', '6da2036332c92e166b3ea3ceb76e81dc.jpeg', 1, '没抓到，好尴尬啊…随便啦，我只是只小猫#猫咪的迷惑行为 #家有傻猫', 0, 0, '2022-06-03 08:58:06');
-INSERT INTO `t_video` VALUES (23, '5de9b21ebcffec54895110fa4468d83a.mp4', '3726a0b4b9a055ebd2e2edfb5e478ce2.jpeg', 1, '每天一遍，快乐无限 #猫咪搞笑 #萌宠宝宝的日常', 0, 0, '2022-06-03 08:58:18');
+INSERT INTO `t_video` VALUES (23, '5de9b21ebcffec54895110fa4468d83a.mp4', '3726a0b4b9a055ebd2e2edfb5e478ce2.jpeg', 1, '每天一遍，快乐无限 #猫咪搞笑 #萌宠宝宝的日常', 0, 1, '2022-06-03 08:58:18');
 INSERT INTO `t_video` VALUES (24, 'a66b878de49a26f5093db94e07694cb4.mp4', '4d7868cfc8adf22e993e770b69ed5e06.jpeg', 1, '它带着小背包过来了#猫 #可爱 #治愈 #小可爱哈比', 0, 0, '2022-06-03 08:58:29');
 INSERT INTO `t_video` VALUES (25, 'da7520aa81284eca69614a5216219200.mp4', '9c7e309c531defa0d3a111bdc22078cb.jpeg', 1, '小猫咪帮你们抓到了，麻袋自备哦#别再冬眠去热烈的夏天', 0, 0, '2022-06-03 08:58:38');
 INSERT INTO `t_video` VALUES (26, '0656be253ab57cba3a89b4161456ec34.mp4', 'b60878b76a1477d4b489eb335d6f9730.jpeg', 1, '小猫咪有多喜欢被摸头～#萌宠 #抖音动物图鉴 #猫咪的日常', 0, 0, '2022-06-03 08:59:06');
