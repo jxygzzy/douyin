@@ -61,6 +61,14 @@ func (cs *CommentService) CommentList(video_id int64, user_id int64) (*CommentLi
 	if err != nil {
 		return nil, err
 	}
+	if commentDaos == nil {
+		return &CommentListResponse{
+			Response: response.Response{
+				StatusCode: 0,
+				StatusMsg:  "评论列表为空",
+			},
+		}, nil
+	}
 	wg := sync.WaitGroup{}
 	commentList := make([]response.Comment, 0, len(*commentDaos))
 	for i, n := 0, len(*commentDaos); i < n; i++ {

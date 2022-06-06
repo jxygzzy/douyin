@@ -66,7 +66,7 @@ func DelComment(video_id int64, comment_id int64) error {
 }
 
 func CommentList(video_id int64) (commentList *[]CommentDao, err error) {
-	dbErr := DB.Model(&CommentDao{}).Where("delete_at != 1").Order("create_date desc").Scan(&commentList)
+	dbErr := DB.Model(&CommentDao{}).Where("delete_at != 1 and video_id = ?", video_id).Order("create_date desc").Scan(&commentList)
 	if dbErr.Error != nil {
 		return nil, dbErr.Error
 	}
