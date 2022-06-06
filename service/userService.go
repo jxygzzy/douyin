@@ -43,7 +43,7 @@ func (us *UserSerice) Login(username string, password string) (resp *UserLoginRe
 	}
 	resp = &UserLoginResponse{
 		Response: response.Response{
-			StatusCode: 200,
+			StatusCode: 0,
 			StatusMsg:  "登录成功",
 		},
 		UserId: userDao.ID,
@@ -69,7 +69,7 @@ func (us *UserSerice) Register(username string, password string) (*UserLoginResp
 	}
 	return &UserLoginResponse{
 		Response: response.Response{
-			StatusCode: 200,
+			StatusCode: 0,
 			StatusMsg:  "注册成功",
 		},
 		UserId: userDao.ID,
@@ -89,7 +89,7 @@ func (us *UserSerice) UserInfo(user_id int64) (*UserInfoResponse, error) {
 	}
 	return &UserInfoResponse{
 		Response: response.Response{
-			StatusCode: 200,
+			StatusCode: 0,
 			StatusMsg:  "获取成功",
 		},
 		User: user,

@@ -27,7 +27,7 @@ func (rs *RelationService) Follow(user_id int64, to_user_id int64) (*response.Re
 		return nil, err
 	}
 	return &response.Response{
-		StatusCode: 200,
+		StatusCode: 0,
 		StatusMsg:  "关注成功",
 	}, nil
 }
@@ -41,7 +41,7 @@ func (rs *RelationService) UnFollow(user_id int64, to_user_id int64) (*response.
 		return nil, err
 	}
 	return &response.Response{
-		StatusCode: 200,
+		StatusCode: 0,
 		StatusMsg:  "取消关注成功",
 	}, nil
 }
@@ -58,7 +58,7 @@ func (rs *RelationService) FollowList(user_id int64) (*FollowListResponse, error
 	}
 	return &FollowListResponse{
 		Response: response.Response{
-			StatusCode: 200,
+			StatusCode: 0,
 			StatusMsg:  "获取成功",
 		},
 		UserList: userList,
@@ -72,7 +72,7 @@ func (rs *RelationService) GetFollowerList(userId int64) (*FollowerListResponse,
 	}
 	return &FollowerListResponse{
 		Response: response.Response{
-			StatusCode: 200,
+			StatusCode: 0,
 			StatusMsg:  "查询成功",
 		},
 		UserList: userList,

@@ -30,7 +30,7 @@ func (cs *CommentService) PublishComment(video_id int64, user_id int64, comment_
 	var timeFormat = "01-02"
 	return &CommentResponse{
 		Response: response.Response{
-			StatusCode: 200,
+			StatusCode: 0,
 			StatusMsg:  "评论成功",
 		},
 		User:       *user,
@@ -46,7 +46,7 @@ func (cs *CommentService) DelComment(video_id int64, comment_id int64) (*respons
 		return nil, err
 	}
 	return &response.Response{
-		StatusCode: 200,
+		StatusCode: 0,
 		StatusMsg:  "删除评论成功",
 	}, nil
 }
@@ -82,7 +82,7 @@ func (cs *CommentService) CommentList(video_id int64, user_id int64) (*CommentLi
 	})
 	return &CommentListResponse{
 		Response: response.Response{
-			StatusCode: 200,
+			StatusCode: 0,
 			StatusMsg:  "获取评论列表成功",
 		},
 		CommentList: &commentList,

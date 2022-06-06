@@ -20,7 +20,7 @@ func (fs *FavoriteService) Favorite(user_id int64, video_id int64) (*response.Re
 		return nil, err
 	}
 	return &response.Response{
-		StatusCode: 200,
+		StatusCode: 0,
 		StatusMsg:  "点赞成功",
 	}, nil
 }
@@ -31,7 +31,7 @@ func (fs *FavoriteService) UnFavorite(user_id int64, video_id int64) (*response.
 		return nil, err
 	}
 	return &response.Response{
-		StatusCode: 200,
+		StatusCode: 0,
 		StatusMsg:  "取消点赞成功",
 	}, nil
 }
@@ -45,6 +45,14 @@ func (fs *FavoriteService) FavoriteList(user_id int64) (*FavoriteListResponse, e
 	videoDaos, err := db.FavoriteList(user_id)
 	if err != nil {
 		return nil, err
+	}
+	if videoDaos == nil {
+		return &FavoriteListResponse{
+			Response: response.Response{
+				StatusCode: 0,
+				StatusMsg:  "喜欢列表为空",
+			},
+		}, nil
 	}
 	wg := sync.WaitGroup{}
 	videoList := make([]response.Video, 0, len(*videoDaos))
@@ -71,7 +79,7 @@ func (fs *FavoriteService) FavoriteList(user_id int64) (*FavoriteListResponse, e
 	})
 	return &FavoriteListResponse{
 		Response: response.Response{
-			StatusCode: 200,
+			StatusCode: 0,
 			StatusMsg:  "获取点赞列表成功",
 		},
 		VideoList: &videoList,

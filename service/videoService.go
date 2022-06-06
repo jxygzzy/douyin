@@ -54,7 +54,7 @@ func (vs *VideoService) UploadData(user_id int64, title string, fileName string,
 		log.Printf("用户：%v 临时文件已删除\n", user_id)
 	}()
 	return &response.Response{
-		StatusCode: 200,
+		StatusCode: 0,
 		StatusMsg:  "投稿成功，正在上传",
 	}
 }
@@ -102,7 +102,7 @@ func (vs *VideoService) Feed(user_id int64, last_time time.Time) (resp *FeedResp
 	})
 	return &FeedResponse{
 		Response: response.Response{
-			StatusCode: 200,
+			StatusCode: 0,
 			StatusMsg:  fmt.Sprintf("刷新%d条视频", len(*videos)),
 		},
 		NextTime:  next_time.Unix(),
@@ -149,7 +149,7 @@ func (vs *VideoService) PublishList(user_id int64) (*PublishListResponse, error)
 	})
 	return &PublishListResponse{
 		Response: response.Response{
-			StatusCode: 200,
+			StatusCode: 0,
 			StatusMsg:  fmt.Sprintf("共%d条发布", len(*videoDaos)),
 		},
 		VideoList: &videoList,

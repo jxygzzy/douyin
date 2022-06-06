@@ -6,12 +6,15 @@ import (
 )
 
 type UserDao struct {
-	ID            int64  `grorm:"column:id;autoIncrement"`
-	Username      string `gorm:"column:username"`
-	Password      string `gorm:"column:password"`
-	Name          string `gorm:"column:name"`
-	FollowCount   int64  `gorm:"column:follow_count"`
-	FollowerCount int64  `gorm:"column:follower_count"`
+	ID              int64  `grorm:"column:id;autoIncrement"`
+	Username        string `gorm:"column:username"`
+	Password        string `gorm:"column:password"`
+	Name            string `gorm:"column:name"`
+	FollowCount     int64  `gorm:"column:follow_count"`
+	FollowerCount   int64  `gorm:"column:follower_count"`
+	Avatar          string `gorm:"column:avatar"`
+	BackgroundImage string `gorm:"column:background_image"`
+	Signature       string `gorm:"column:signature"`
 }
 
 func (UserDao) TableName() string {
@@ -33,6 +36,9 @@ func GetAuthorById(user_id int64, author_id int64) (author response.User) {
 	t_user.NAME AS name,
 	t_user.follow_count AS follow_count,
 	t_user.follower_count AS foolower_count,
+	t_user.avatar as avatar,
+	t_user.background_image as background_image,
+	t_user.signature as signature,
 	IF((
 		SELECT
 			count(*) 
@@ -56,6 +62,9 @@ func GetUserById(user_id int64, to_user_id int64) (user *response.User, err erro
 	t_user.NAME AS name,
 	t_user.follow_count AS follow_count,
 	t_user.follower_count AS foolower_count ,
+	t_user.avatar as avatar,
+	t_user.background_image as background_image,
+	t_user.signature as signature,
 	IF((
 		SELECT
 			count(*) 

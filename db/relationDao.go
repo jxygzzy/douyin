@@ -91,6 +91,9 @@ func FollowList(user_id int64) (userList *[]response.User, err error) {
 		t_user.NAME AS name,
 		t_user.follow_count AS follow_count,
 		t_user.follower_count AS foolower_count,
+		t_user.avatar as avatar,
+		t_user.background_image as background_image,
+		t_user.signature as signature,
 	IF
 		((
 			SELECT
@@ -124,6 +127,9 @@ func GetFollowerList(userId int64) (userList *[]response.User, err error) {
 		t_user.NAME AS name,
 		t_user.follow_count AS follow_count,
 		t_user.follower_count AS foolower_count,
+		t_user.avatar as avatar,
+		t_user.background_image as background_image,
+		t_user.signature as signature,
 	IF
 		((
 			SELECT
