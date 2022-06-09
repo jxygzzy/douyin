@@ -35,4 +35,6 @@ type User struct {
 	Avatar          string `json:"avatar"`
 	BackgroundImage string `json:"background_image"`
 	Signature       string `json:"signature"`
+	TotalFavorited  int64  `json:"total_favorited"`
+	FavoriteCount   int64  `json:"favorite_count"`
 }

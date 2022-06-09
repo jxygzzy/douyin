@@ -82,5 +82,4 @@ func FavoriteList(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, resp)
-	return
 }

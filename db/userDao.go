@@ -35,18 +35,22 @@ func GetAuthorById(user_id int64, author_id int64) (author response.User) {
 	select t_user.id AS id,
 	t_user.NAME AS name,
 	t_user.follow_count AS follow_count,
-	t_user.follower_count AS foolower_count,
+	t_user.follower_count AS follower_count,
 	t_user.avatar as avatar,
 	t_user.background_image as background_image,
 	t_user.signature as signature,
+	(select count(*) from t_favorite,t_video 
+	where t_video.user_id = t_user.id 
+	and t_favorite.video_id = t_video.id) as total_favorited,
+	(select count(*) from t_favorite where user_id = t_user.id ) as favorite_count,
 	IF((
 		SELECT
 			count(*) 
 		FROM
 			t_relation
 		WHERE
-		t_relation.to_user_id = ?
-		AND t_relation.user_id = t_user.id
+		t_relation.to_user_id = t_user.id
+		AND t_relation.user_id = ?
 		) > 0,
 		TRUE,
 		FALSE 
@@ -61,18 +65,22 @@ func GetUserById(user_id int64, to_user_id int64) (user *response.User, err erro
 	select t_user.id AS id,
 	t_user.NAME AS name,
 	t_user.follow_count AS follow_count,
-	t_user.follower_count AS foolower_count ,
+	t_user.follower_count AS follower_count ,
 	t_user.avatar as avatar,
 	t_user.background_image as background_image,
 	t_user.signature as signature,
+	(select count(*) from t_favorite,t_video 
+	where t_video.user_id = t_user.id 
+	and t_favorite.video_id = t_video.id) as total_favorited,
+	(select count(*) from t_favorite where user_id = t_user.id ) as favorite_count,
 	IF((
 		SELECT
 			count(*) 
 		FROM
 			t_relation
 		WHERE
-		t_relation.to_user_id = ?
-		AND t_relation.user_id = t_user.id
+		t_relation.to_user_id = t_user.id
+		AND t_relation.user_id = ?
 		) > 0,
 		TRUE,
 		FALSE 

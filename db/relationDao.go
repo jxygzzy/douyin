@@ -94,19 +94,11 @@ func FollowList(user_id int64) (userList *[]response.User, err error) {
 		t_user.avatar as avatar,
 		t_user.background_image as background_image,
 		t_user.signature as signature,
-	IF
-		((
-			SELECT
-				count(*) 
-			FROM
-				t_relation r2 
-			WHERE
-				r2.to_user_id = r1.user_id 
-				AND r2.user_id = r1.to_user_id 
-			) > 0,
-			TRUE,
-			FALSE 
-		) AS is_follow 
+		(select count(*) from t_favorite,t_video 
+		where t_video.user_id = t_user.id 
+		and t_favorite.video_id = t_video.id) as total_favorited,
+		(select count(*) from t_favorite where user_id = t_user.id ) as favorite_count,
+		'true' is_follow 
 	FROM
 		t_relation r1,
 		t_user 
@@ -130,6 +122,10 @@ func GetFollowerList(userId int64) (userList *[]response.User, err error) {
 		t_user.avatar as avatar,
 		t_user.background_image as background_image,
 		t_user.signature as signature,
+		(select count(*) from t_favorite,t_video 
+		where t_video.user_id = t_user.id 
+		and t_favorite.video_id = t_video.id) as total_favorited,
+		(select count(*) from t_favorite where user_id = t_user.id ) as favorite_count,
 	IF
 		((
 			SELECT
