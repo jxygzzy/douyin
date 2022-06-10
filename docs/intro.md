@@ -56,4 +56,20 @@ windows环境选择**windows-64**下载解压得到一个 .exe 文件，放置�
 ## 项目展示
 
 
+![首页](home.png)
+首页
 
+![用户界面](userinfo.png)
+用户界面
+
+![喜欢列表](likes.png)
+喜欢列表
+
+![评论列表](comment.png)
+评论列表
+
+![关注列表](follow.png)
+关注列表
+
+![粉丝列表](follower.png)
+粉丝列表
