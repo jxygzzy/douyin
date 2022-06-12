@@ -9,6 +9,7 @@ import (
 	"douyin/util/videoutil"
 	"log"
 	"net/http"
+	"path"
 	"strconv"
 	"time"
 
@@ -36,13 +37,13 @@ func PublishVideo(c *gin.Context) {
 		return
 	}
 	filePath := videoutil.GetCurrentAbPath() + config.TEMP_FILE_DIR
-	header.Filename = token + header.Filename
+	header.Filename = token + strconv.Itoa(int(time.Now().Unix())) + path.Ext(header.Filename)
 	err := c.SaveUploadedFile(header, filePath+header.Filename)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	vs := service.NewVideoService()
-	resp := vs.UploadData(user_id_int, title, strconv.Itoa(int(time.Now().Unix())), filePath)
+	resp := vs.UploadData(user_id_int, title, header.Filename, filePath)
 	c.JSON(http.StatusOK, resp)
 }
 
