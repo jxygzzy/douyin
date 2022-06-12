@@ -45,7 +45,7 @@ func GetSnapshot(videoPath string, snapshotPath string, frameNum int) (snapshotN
 	}
 
 	// 成功则返回生成的缩略图名
-	names := strings.Split(snapshotPath, "\\")
+	names := strings.Split(snapshotPath, config.RUNTIME_ENV)
 	snapshotName = names[len(names)-1] + ".jpeg"
 	return
 }
