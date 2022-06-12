@@ -42,7 +42,7 @@ func PublishVideo(c *gin.Context) {
 		log.Fatalln(err)
 	}
 	vs := service.NewVideoService()
-	resp := vs.UploadData(user_id_int, title, header.Filename, filePath)
+	resp := vs.UploadData(user_id_int, title, strconv.Itoa(int(time.Now().Unix())), filePath)
 	c.JSON(http.StatusOK, resp)
 }
 

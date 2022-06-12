@@ -2,7 +2,7 @@ package config
 
 const (
 	DSN                = "root:123456@tcp(127.0.0.1:3306)/heart?charset=utf8mb4&parseTime=True"
-	ServerPort         = ":8088"
+	ServerPort         = ":5005"
 	Redis_addr         = "127.0.0.1:6379"
 	Redis_password     = ""
 	Redis_db           = 0
