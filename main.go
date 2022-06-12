@@ -24,9 +24,11 @@ func initFilePath() {
 	if pos != -1 {
 		// windows盘符
 		config.TEMP_FILE_DIR = "\\tmp\\"
+		config.RUNTIME_ENV = "\\"
 	} else {
 		// unix路径
 		config.TEMP_FILE_DIR = "/tmp/"
+		config.RUNTIME_ENV = "/"
 	}
 	exist, err := pathExists(systemPath + config.TEMP_FILE_DIR)
 	if err != nil {

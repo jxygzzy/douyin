@@ -24,3 +24,4 @@ const (
 )
 
 var TEMP_FILE_DIR = ""
+var RUNTIME_ENV = ""
