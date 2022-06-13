@@ -137,7 +137,6 @@
 ![数据库模型](heart-model.png)
 <center><p>数据库模型图</p></center>
 
-数据库模型
 
 ## 启动环境
 
