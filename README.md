@@ -10,7 +10,7 @@
 ```shell
 go build
 
-./douyin.exe
+./douyin
 
 ```
 
