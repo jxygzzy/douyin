@@ -135,6 +135,7 @@
 索引方面：user表中username使用唯一索引，所有表id均为主键id且自增
 
 ![数据库模型](heart-model.png)
+<center><p>数据库模型图</p></center>
 
 数据库模型
 
@@ -188,22 +189,23 @@ username:heart   password:123456 // 辅助测试账号
 ### 截图展示
 
 ![首页](home.png)
-首页
+<center><p>首页</p></center>
 
 ![用户界面](userinfo.png)
-用户界面
+<center><p>用户界面</p></center>
 
 ![喜欢列表](likes.png)
-喜欢列表
+<center><p>喜欢列表</p></center>
 
 ![评论列表](comment.png)
-评论列表
+<center><p>评论列表</p></center>
 
 ![关注列表](follow.png)
-关注列表
+<center><p>关注列表</p></center>
 
 ![粉丝列表](follower.png)
-粉丝列表
+<center><p>粉丝列表</p></center>
+
 
 ## 鸣谢
 
