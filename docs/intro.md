@@ -135,6 +135,7 @@
 索引方面：user表中username使用唯一索引，所有表id均为主键id且自增
 
 ![数据库模型](heart-model.png)
+
 数据库模型
 
 ## 启动环境
