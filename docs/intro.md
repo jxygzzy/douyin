@@ -145,7 +145,7 @@
 
 可在项目/config/config.go中修改DSN
 
-例如：`root:123456@tcp(127.0.0.1:3306)/heart?charset=utf8&parseTime=True`
+例如：`root:123456@tcp(127.0.0.1:3306)/heart?charset=utf8mb4&parseTime=True`
 
 SQL文件在/sql/heart.sql
 

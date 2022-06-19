@@ -11,7 +11,7 @@
  Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 13/06/2022 10:13:15
+ Date: 19/06/2022 14:11:45
 */
 
 SET NAMES utf8mb4;
@@ -59,7 +59,7 @@ CREATE TABLE `t_favorite`  (
   INDEX `user_id`(`user_id`) USING BTREE,
   CONSTRAINT `t_favorite_ibfk_1` FOREIGN KEY (`video_id`) REFERENCES `t_video` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `t_favorite_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '点赞表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '点赞表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_favorite
@@ -78,6 +78,7 @@ INSERT INTO `t_favorite` VALUES (14, 30, 1);
 INSERT INTO `t_favorite` VALUES (15, 29, 1);
 INSERT INTO `t_favorite` VALUES (16, 22, 1);
 INSERT INTO `t_favorite` VALUES (17, 21, 1);
+INSERT INTO `t_favorite` VALUES (18, 31, 1);
 
 -- ----------------------------
 -- Table structure for t_relation
@@ -143,6 +144,7 @@ CREATE TABLE `t_video`  (
   `create_date` datetime(0) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id`) USING BTREE,
+  INDEX `create_date`(`create_date`) USING BTREE,
   CONSTRAINT `t_video_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '视频表' ROW_FORMAT = Dynamic;
 
@@ -171,6 +173,6 @@ INSERT INTO `t_video` VALUES (27, '94c100280116c834538693fa475349ce.mp4', '27712
 INSERT INTO `t_video` VALUES (28, 'cdcd339617cab47f8c81cfc68b8fdffc.mp4', 'dc758ab680c3c0c77a91bb1f323b5df1.jpeg', 1, '原来是你偷吃了我的比巴卜#猫咪的迷惑行为', 0, 0, '2022-06-03 08:59:29');
 INSERT INTO `t_video` VALUES (29, 'd4e2922092678ec86c8a02943c9d1293.mp4', 'b0e9a8c36d67fbbe9ae7cc427aa699d9.jpeg', 1, '最近画画又进步了，我跟我的小猫咪都很满意今天的作品', 1, 1, '2022-06-03 08:59:41');
 INSERT INTO `t_video` VALUES (30, '96f2709c4d0d90204c78f3ecc16fe9aa.mp4', 'd8af3139238884e1f6bf151e1cc56998.jpeg', 2, '快喊你身边的憨憨来看欢乐恰恰恰🌈 #二哈 #狗狗 #狗狗搞笑 #狗 - 抖音', 1, 2, '2022-06-06 14:36:42');
-INSERT INTO `t_video` VALUES (31, '551e0084f7ce27f20762ea85c1fc5539.mp4', '36115a70721a283dc4d9a0deb70bd859.jpeg', 1, '狗子：咱俩到底谁是狗？ #萌宠 #狗狗 #精神小狗 #萌宠搞笑 #动物', 0, 0, '2022-06-12 10:42:19');
+INSERT INTO `t_video` VALUES (31, '551e0084f7ce27f20762ea85c1fc5539.mp4', '36115a70721a283dc4d9a0deb70bd859.jpeg', 1, '狗子：咱俩到底谁是狗？ #萌宠 #狗狗 #精神小狗 #萌宠搞笑 #动物', 0, 1, '2022-06-12 10:42:19');
 
 SET FOREIGN_KEY_CHECKS = 1;
