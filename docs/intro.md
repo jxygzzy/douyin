@@ -133,7 +133,7 @@
 
 用户头像等数据使用默认值，没有接口修改这些数据
 
-索引方面：user表中username使用唯一索引，所有表id均为主键id且自增
+索引方面：user表中username使用唯一索引，所有表id均为主键id且自增，视频投稿时间为普通索引
 
 ![数据库模型](heart-model.png)
 <center><p>数据库模型图</p></center>

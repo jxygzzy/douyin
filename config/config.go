@@ -13,10 +13,10 @@ const (
 	FavoriteTableName  = "t_favorite"
 	CommentTableName   = "t_comment"
 	RelationTableName  = "t_relation"
-	QiniuAccessKey     = "EVmS6sY7STDCwq9Iw79geJEJalk2h0k4ql4r0V4s"
-	QiniuSecretKey     = "Pp_AtsasRqDwfE6ClVIKlkKsNesWmHjK0Zqu3ouU"
-	QiniuBucket        = "douyin-heart"
-	QiniuDomian        = "http://rcnco1agb.hd-bkt.clouddn.com"
+	QiniuAccessKey     = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+	QiniuSecretKey     = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+	QiniuBucket        = "xxxxxxx"
+	QiniuDomian        = "http://xxxx.xxxxt.clouddn.com"
 	QiniuUrlExpire     = 60 * 60 * 24 * 2 // 2天
 	RedisUrlExpireDiff = 60 * 60 * 2      //2小时 客户端拿到链接至少两小时内有效
 
